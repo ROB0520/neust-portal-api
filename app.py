@@ -216,7 +216,6 @@ def checkTables():
 	conn.close()
 
 checkTables()
-searchServers()
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 app = Flask(__name__)
@@ -249,9 +248,9 @@ def index():
 			{"id": row[0], "server": row[1], "status": bool(row[2])}
 			for row in server_status
 		],
-		"last_updated": last_updated
+		"last_updated": last_updated[0]
 	}
 	cursor.close()
 	return data
 
-app.run(host='0.0.0.0', port=5002)
+app.run(host='0.0.0.0', port=5002, debug=False)
