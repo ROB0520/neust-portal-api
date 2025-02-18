@@ -1,8 +1,6 @@
 services:
   web: 
-    build:
-      context: .
-      target: builder
+    build: '.'
     stop_signal: SIGINT
     ports:
       - '5002:5002'
