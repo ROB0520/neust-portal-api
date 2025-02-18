@@ -237,7 +237,7 @@ def index():
 	cursor.execute('SELECT id, server, status FROM server_status')
 	server_status = cursor.fetchall()
 
-	cursor.execute('SELECT updated_at FROM last_updated ORDER BY id DESC LIMIT 1')
+	cursor.execute('SELECT UNIX_TIMESTAMP(updated_at) FROM last_updated ORDER BY id DESC LIMIT 1')
 	last_updated = cursor.fetchone()
 
 	data = {
@@ -253,10 +253,5 @@ def index():
 	}
 	cursor.close()
 	return data
-
-def convertTimestamp(timestamp):
-	dt = datetime.strptime(timestamp, '%a, %d %b %Y %H:%M:%S GMT')
-	unix_timestamp = int(dt.timestamp())
-	return unix_timestamp
 
 app.run(host='0.0.0.0', port=5002)
