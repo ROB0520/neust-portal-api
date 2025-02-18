@@ -1,0 +1,7 @@
+requests
+beautifulsoup4
+Flask
+schedule
+flask-cors
+apscheduler
+mysql-connector-python
