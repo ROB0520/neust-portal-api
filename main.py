@@ -274,6 +274,3 @@ def deptIndex(dept):
 		}), 404)
 
 	return redirect(serverLink[0], 308)
-
-def run():
-	app.run(host='0.0.0.0', port=5002, debug=False)
