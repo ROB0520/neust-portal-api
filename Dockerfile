@@ -7,4 +7,4 @@ COPY . .
 RUN pip install -r requirements.txt
 
 EXPOSE 5002 
-CMD ["python", "app.py"]
+CMD ["waitress-serve", "--host", "51.79.196.57", "app:run"]
