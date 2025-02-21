@@ -273,4 +273,4 @@ def deptIndex(dept):
 			"error": f"Subdomain '{dept}' not found"
 		}), 404)
 
-	return render_template('redirect.html', dept=dept.toupper(), server=serverLink[0])	
+	return render_template('redirect.html', dept=dept.upper(), server=serverLink[0])	
