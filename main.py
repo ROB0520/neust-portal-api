@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import urllib3
-from flask import Flask, make_response, jsonify, redirect
+from flask import Flask, make_response, jsonify, redirect, render_template
 import mysql.connector
 from flask_cors import CORS, cross_origin
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -273,4 +273,4 @@ def deptIndex(dept):
 			"error": f"Subdomain '{dept}' not found"
 		}), 404)
 
-	return redirect(serverLink[0], 308)
+	return render_template('redirect.html', dept=dept.toupper(), server=serverLink[0])	
