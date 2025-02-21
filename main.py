@@ -264,7 +264,7 @@ def deptIndex(dept):
 		return redirect(servers[serverIndex - 1], 308)		
 
 	cursor = conn.cursor()
-	cursor.execute('SELECT server FROM departments WHERE acronym = %s', (dept))
+	cursor.execute('SELECT server FROM departments WHERE acronym = %s', (dept,))
 	serverLink = cursor.fetchone()
 
 	cursor.close()
