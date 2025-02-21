@@ -259,12 +259,12 @@ def deptIndex(dept):
 		serverIndex = int(dept.split('-')[1])
 		if serverIndex <= 0 or serverIndex > len(servers):
 			return make_response(jsonify({
-				"error": f"Server index '{serverIndex}' not found"
+				"error": f"Server '{serverIndex}' not found"
 			}), 404)
 		return redirect(servers[serverIndex - 1], 308)		
 
 	cursor = conn.cursor()
-	cursor.execute('SELECT server FROM departments WHERE acronym = %s', (dept,))
+	cursor.execute('SELECT server FROM departments WHERE acronym = %s', (dept))
 	serverLink = cursor.fetchone()
 
 	cursor.close()
@@ -273,4 +273,4 @@ def deptIndex(dept):
 			"error": f"Subdomain '{dept}' not found"
 		}), 404)
 
-	return render_template('redirect.html', dept=dept.upper(), server=serverLink[0])	
+	return redirect(serverLink[0], 308)
