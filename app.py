@@ -2,9 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import urllib3
-from flask import Flask
+from flask import Flask, make_response, jsonify, redirect
 import mysql.connector
-from datetime import datetime, timedelta
 from flask_cors import CORS, cross_origin
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
@@ -115,8 +114,8 @@ conversions = {
         "acronym": "CPADM",
     },
     "BALCS": {
-        "value": "Bachelor of Arts in Literary and Cultural Studies",
-        "acronym": "BALCS",
+        "value": "Institute of Linguistics and Literature",
+        "acronym": "IOLL",
     },
 }
 
@@ -191,7 +190,6 @@ def searchServers():
 			cursor.execute('INSERT INTO server_status (server, status) VALUES (%s, %s)', (server, True))
 		conn.commit()
 	
-	print('Servers updated')
 	cursor.execute('INSERT INTO last_updated (updated_at) VALUES (CURRENT_TIMESTAMP)')
 	conn.commit()
 
@@ -218,7 +216,8 @@ def checkTables():
 checkTables()
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-app = Flask(__name__)
+app = Flask(__name__, subdomain_matching=True)
+app.config['SERVER_NAME'] = os.environ['BASE_URL']
 CORS(app)
 
 scheduler = BackgroundScheduler()
@@ -226,14 +225,14 @@ scheduler.add_job(func=searchServers, trigger="interval", seconds=3600)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
-@app.route("/")
+@app.route("/", subdomain="api")
 @cross_origin()
-def index():
+def apiIndex():
 	cursor = conn.cursor()
-	cursor.execute('SELECT id, server, department, acronym FROM departments')
+	cursor.execute('SELECT server, department, acronym FROM departments')
 	departments = cursor.fetchall()
 
-	cursor.execute('SELECT id, server, status FROM server_status')
+	cursor.execute('SELECT server, status FROM server_status')
 	server_status = cursor.fetchall()
 
 	cursor.execute('SELECT UNIX_TIMESTAMP(updated_at) FROM last_updated ORDER BY id DESC LIMIT 1')
@@ -241,16 +240,39 @@ def index():
 
 	data = {
 		"departments": [
-			{"id": row[0], "server": row[1], "department": row[2], "acronym": row[3]}
+			{"server": row[0], "department": row[1], "acronym": row[2]}
 			for row in departments
 		],
 		"server_status": [
-			{"id": row[0], "server": row[1], "status": bool(row[2])}
+			{"server": row[0], "status": bool(row[1])}
 			for row in server_status
 		],
 		"last_updated": last_updated[0]
 	}
 	cursor.close()
 	return data
+
+@app.route("/", subdomain="<dept>")
+@cross_origin()
+def deptIndex(dept):
+	if dept.lower().startswith('server-'):
+		serverIndex = int(dept.split('-')[1])
+		if serverIndex <= 0 or serverIndex > len(servers):
+			return make_response(jsonify({
+				"error": f"Server index '{serverIndex}' not found"
+			}), 404)
+		return redirect(servers[serverIndex - 1], 308)		
+
+	cursor = conn.cursor()
+	cursor.execute('SELECT server FROM departments WHERE acronym = %s', (dept,))
+	serverLink = cursor.fetchone()
+
+	cursor.close()
+	if not serverLink:
+		return make_response(jsonify({
+			"error": f"Subdomain '{dept}' not found"
+		}), 404)
+
+	return redirect(serverLink[0], 308)
 
 app.run(host='0.0.0.0', port=5002, debug=False)
