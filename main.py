@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import urllib3
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
 import mysql.connector
 from flask_cors import CORS, cross_origin
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -188,7 +188,7 @@ def apiIndex(subdomain):
 			cursor.close()
 			return data
 		case 'ograph':
-			return app.send_static_file('public/ograph.jpg')
+			return send_file('public/ograph.jpg', mimetype='image/jpg')
 		case _:
 			cursor.execute('SELECT subdomain FROM servers WHERE subdomain IS NOT NULL')
 			server_subdomains = cursor.fetchall()
