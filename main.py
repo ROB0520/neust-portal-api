@@ -253,7 +253,6 @@ def apiIndex():
 	return data
 
 @app.route("/", subdomain="<dept>")
-@cross_origin()
 def deptIndex(dept):
 	if dept.lower().startswith('server-'):
 		serverIndex = int(dept.split('-')[1])
