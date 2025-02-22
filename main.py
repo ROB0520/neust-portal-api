@@ -187,6 +187,8 @@ def apiIndex(subdomain):
 			}
 			cursor.close()
 			return data
+		case 'ograph':
+			return app.send_static_file('public/ograph.jpg')
 		case _:
 			cursor.execute('SELECT subdomain FROM servers WHERE subdomain IS NOT NULL')
 			server_subdomains = cursor.fetchall()
