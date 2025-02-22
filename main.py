@@ -195,11 +195,11 @@ def apiIndex(subdomain):
 				cursor.execute('SELECT link, name FROM servers WHERE subdomain = %s', (subdomain,))
 				[ server_link, name ] = cursor.fetchone()
 				cursor.close()
-				return render_template('redirect.html', dept=name, url=server_link)
+				return render_template('redirect.html', dept=name, url=server_link, base_url=os.environ['BASE_URL'])
 			else:
 				cursor.execute('SELECT link FROM servers WHERE id = (SELECT server_id FROM colleges WHERE subdomain = %s)', (subdomain,))
 				college_link = cursor.fetchone()
 				cursor.close()
 				if not college_link:
-					return render_template('no-redirect.html', dept=subdomain.upper(), url=f'https://{os.environ["BASE_URL"]}')
-				return render_template('redirect.html', dept=subdomain.upper(), url=college_link[0])
+					return render_template('no-redirect.html', dept=subdomain.upper(), url=f'https://{os.environ["BASE_URL"]}', base_url=os.environ['BASE_URL'])
+				return render_template('redirect.html', dept=subdomain.upper(), url=college_link[0], base_url=os.environ['BASE_URL'])
