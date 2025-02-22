@@ -157,9 +157,18 @@ scheduler.add_job(func=searchServers, trigger="interval", seconds=3600)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
+@app.route("/<type>", subdomain="ograph")
+@cross_origin()
+def ograph(type):
+	match type:
+		case 'image':
+			return send_file('public/ograph.jpg', mimetype='image/jpg')
+		case _:
+			return send_file('public/ograph-error.jpg', mimetype='image/jpg')
+
 @app.route("/", subdomain="<subdomain>")
 @cross_origin()
-def apiIndex(subdomain):
+def index(subdomain):
 	if subdomain.startswith('www.'):
 		subdomain = subdomain[4:]
 	print(subdomain, file=sys.stderr)
@@ -188,8 +197,6 @@ def apiIndex(subdomain):
 			}
 			cursor.close()
 			return data
-		case 'ograph':
-			return send_file('public/ograph.jpg', mimetype='image/jpg')
 		case _:
 			cursor.execute('SELECT subdomain FROM servers WHERE subdomain IS NOT NULL')
 			server_subdomains = cursor.fetchall()
@@ -206,3 +213,4 @@ def apiIndex(subdomain):
 				if not college_link:
 					return render_template('no-redirect.html', dept=subdomain.upper(), url=f'https://{os.environ["BASE_URL"]}', base_url=os.environ['BASE_URL'])
 				return render_template('redirect.html', dept=subdomain.upper(), url=college_link[0], base_url=os.environ['BASE_URL'])
+		
