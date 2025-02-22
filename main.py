@@ -199,6 +199,7 @@ def apiIndex(subdomain):
 			else:
 				cursor.execute('SELECT link FROM servers WHERE id = (SELECT id FROM colleges WHERE subdomain = %s)', (subdomain,))
 				college_link = cursor.fetchone()
+				print(college_link, subdomain)
 				cursor.close()
 				if not college_link:
 					return render_template('no-redirect.html', dept=subdomain.upper(), url=f'https://{os.environ["BASE_URL"]}')
