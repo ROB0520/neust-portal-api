@@ -6,3 +6,4 @@ flask-cors
 apscheduler
 mysql-connector-python
 waitress
+python-dotenv

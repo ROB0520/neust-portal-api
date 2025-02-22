@@ -3,4 +3,4 @@ services:
     build: '.'
     stop_signal: SIGINT
     ports:
-      - '5002:5002'
+      - '8080:8080'

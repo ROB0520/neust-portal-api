@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>NEUST Portal Directory - Redirect Not Found</title>
+	<meta name="description" content="Redirect URL to the main NEUST Portal Directory.">
+</head>
+<body>
+	{{ dept }} not found. Redirecting to the main NEUST Portal Directory...
+	<script>
+		setTimeout(() => {
+			window.location.replace("{{ url }}");
+		}, 3000);
+	</script>
+</body>
+</html>
