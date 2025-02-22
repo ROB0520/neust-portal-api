@@ -101,7 +101,7 @@ def searchServers():
 			r.raise_for_status()
 			soup = BeautifulSoup(r.content, 'html.parser')
 		except requests.exceptions.RequestException as e:
-			cursor.execute('UPDATE server_status SET status = %s WHERE link = %s', (False, server))
+			cursor.execute('UPDATE servers SET status = %s WHERE link = %s', (False, server))
 			conn.commit()
 			continue
 
@@ -132,7 +132,7 @@ def searchServers():
 				else:
 					cursor.execute('UPDATE colleges SET server_id = %s WHERE original = %s', (other_server_id, existing_college[0]))
 			
-		cursor.execute('UPDATE server_status SET status = %s WHERE link = %s', (True, server))
+		cursor.execute('UPDATE servers SET status = %s WHERE link = %s', (True, server))
 		conn.commit()
 	
 	cursor.execute('DELETE FROM last_updated')
