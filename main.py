@@ -39,7 +39,7 @@ cursor.execute('''
 		name      VARCHAR(255) NOT NULL,
 		link      VARCHAR(255) NOT NULL,
 		subdomain VARCHAR(255) NULL    ,
-		status    BOOLEAN NULL     DEFAULT false,
+		status    BOOLEAN NULL     DEFAULT false
 	);
 ''')
 
