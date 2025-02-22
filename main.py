@@ -1,3 +1,4 @@
+from __future__ import print_function
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
@@ -11,7 +12,6 @@ import atexit
 import os
 from dotenv import load_dotenv
 load_dotenv()
-from __future__ import print_function
 import sys
 
 conn = mysql.connector.connect(
