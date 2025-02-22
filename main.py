@@ -10,10 +10,9 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
 import os
 from dotenv import load_dotenv
-import logging
-logger = logging.getLogger('waitress')
-logger.setLevel(logging.INFO)
 load_dotenv()
+from __future__ import print_function
+import sys
 
 conn = mysql.connector.connect(
 	host=os.environ.get('DB_HOST', 'localhost'),
@@ -163,7 +162,7 @@ atexit.register(lambda: scheduler.shutdown())
 def apiIndex(subdomain):
 	if subdomain.startswith('www.'):
 		subdomain = subdomain[4:]
-	print(subdomain)
+	print(subdomain, file=sys.stderr)
 	cursor = conn.cursor()
 	match subdomain:
 		case 'api':
