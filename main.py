@@ -40,7 +40,6 @@ cursor.execute('''
 		link      VARCHAR(255) NOT NULL,
 		subdomain VARCHAR(255) NULL    ,
 		status    BOOLEAN NULL     DEFAULT false,
-		PRIMARY KEY (id)
 	);
 ''')
 
