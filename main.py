@@ -85,7 +85,7 @@ if colleges_count == 0:
 cursor.execute('''
 	CREATE TABLE IF NOT EXISTS last_updated (
 		id           INT       PRIMARY KEY AUTO_INCREMENT,
-		last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+		updated_at 	 TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 	);
 ''')
 
@@ -139,7 +139,7 @@ def searchServers():
 	cursor.execute('INSERT INTO last_updated (updated_at) VALUES (CURRENT_TIMESTAMP)')
 	conn.commit()
 
-cursor.execute('SELECT last_updated FROM last_updated ORDER BY id DESC LIMIT 1')
+cursor.execute('SELECT updated_at FROM last_updated ORDER BY id DESC LIMIT 1')
 last_updated = cursor.fetchone()
 if last_updated is None or (datetime.now() - last_updated[0]).days > 1:
 	searchServers()
@@ -171,7 +171,7 @@ def apiIndex(subdomain):
 			cursor.execute('SELECT name, link, status, id FROM servers')
 			servers = cursor.fetchall()
 
-			cursor.execute('SELECT UNIX_TIMESTAMP(last_updated) FROM last_updated ORDER BY id DESC LIMIT 1')
+			cursor.execute('SELECT UNIX_TIMESTAMP(updated_at) FROM last_updated ORDER BY id DESC LIMIT 1')
 			last_updated = cursor.fetchone()
 
 			data = {
