@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -137,6 +138,13 @@ def searchServers():
 	cursor.execute('DELETE FROM last_updated')
 	cursor.execute('INSERT INTO last_updated (updated_at) VALUES (CURRENT_TIMESTAMP)')
 	conn.commit()
+
+cursor.execute('SELECT last_updated FROM last_updated ORDER BY id DESC LIMIT 1')
+last_updated = cursor.fetchone()
+if last_updated is None or (datetime.now() - last_updated[0]).days > 1:
+	searchServers()
+
+cursor.close()
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 app = Flask(__name__, subdomain_matching=True)
