@@ -153,7 +153,7 @@ app.config['SERVER_NAME'] = os.environ['BASE_URL']
 CORS(app)
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=searchServers, trigger="interval", seconds=3600)
+scheduler.add_job(func=searchServers, trigger="interval", seconds=300)
 scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
